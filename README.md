@@ -21,7 +21,7 @@ NOTE: Use `Conda` for Lightning and use `venv` for the component.
 - setup vritual env
 ```bash
 virtualenv ~/venv-doccano 
-source ~/venv-venv-doccano/bin/activate;  python -m pip install venv-doccano; deactivate
+source ~/venv-venv-doccano/bin/activate;  python -m pip install doccano; deactivate
 ```
 
 - test 

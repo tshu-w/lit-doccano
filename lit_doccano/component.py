@@ -16,7 +16,7 @@ events {
 }
 http {
     server {
-      listen $port;
+      listen $port;    
       location / {
         proxy_pass http://$host:$internal_port;
         proxy_hide_header x-frame-options;
@@ -30,6 +30,10 @@ class DoccanoBuildConfig(L.BuildConfig):
     return [
         "sudo apt-get update",
         "sudo apt-get install nginx",
+        "sudo touch /run/nginx.pid",
+        "sudo chown -R `whoami` /etc/nginx/ /var/log/nginx/",
+        "sudo chown -R `whoami` /var/lib/nginx/",
+        "sudo chown `whoami` /run/nginx.pid",
         f"virtualenv ~/{doccano_venv}",
         f". ~/{doccano_venv}/bin/activate; which python; python -m pip install doccano; deactivate",
     ]
@@ -40,7 +44,8 @@ class LitDoccano(L.LightningWork):
 
     def run(self):
         # prepare nginx conf with host and port numbers filled in
-        new_conf_file = os.path.join(os. getcwd(), "nginx-new.conf")
+        cwd = os.getcwd()
+        new_conf_file = os.path.join(cwd, "nginx-new.conf")
         new_conf = open(new_conf_file, "w")
         for l in nginx_conf.splitlines():
             print(l)
@@ -48,20 +53,18 @@ class LitDoccano(L.LightningWork):
         new_conf.close()
 
         # run reverse proxy on external port and remove x-frame-options
-        subprocess.run(
-            f"nginx -c {new_conf_file}",
-            shell=True
-        )
+        cmd = f"nginx -c {new_conf_file}"
+        subprocess.run(cmd, shell=True, executable="/bin/bash")
 
         cmd = "source ~/venv-doccano/bin/activate;doccano init;deactivate"
-        subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True, executable="/bin/bash")
 
         cmd = "source ~/venv-doccano/bin/activate;doccano createuser --username admin --password pass;deactivate"
-        subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True, executable="/bin/bash")
 
         cmd = f"source ~/venv-doccano/bin/activate;export USE_ENFORCE_CSRF_CHECKS=false; doccano webserver;deactivate"
-        subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True, executable="/bin/bash")
 
         cmd = "source ~/venv-doccano/bin/activate;doccano task;deactivate"
-        subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True, executable="/bin/bash")
 
