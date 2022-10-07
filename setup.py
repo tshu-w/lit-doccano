@@ -10,6 +10,6 @@ setup(
     author_email="",
     # REPLACE WITH YOUR OWN GITHUB PROJECT LINK
     url="https://github.com/tshu-w/lit-doccano-component",
-    install_requires=[],
+    install_requires=['lightning','virtualenv'],
     packages=find_packages(),
 )

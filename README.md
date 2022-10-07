@@ -14,6 +14,22 @@ First, install lit_doccano (warning: this component has not been officially appr
 lightning install component https://github.com/tshu-w/lit-doccano
 ```
 
+## Setup virtualenv
+  
+NOTE: Use `Conda` for Lightning and use `venv` for the component. 
+
+- setup vritual env
+```bash
+virtualenv ~/venv-doccano 
+source ~/venv-venv-doccano/bin/activate;  python -m pip install doccano; deactivate
+```
+
+- test 
+```bash
+source ~/venv-doccano/bin/activate; doccano --help; deactivate
+```
+
+
 Once the app is installed, use it in an app:
 
 ```python
