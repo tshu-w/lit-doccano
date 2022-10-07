@@ -14,17 +14,19 @@ First, install lit_doccano (warning: this component has not been officially appr
 lightning install component https://github.com/tshu-w/lit-doccano
 ```
 
+Then, install [NGINX](https://www.nginx.com) in whatever way, make sure `nginx` command is available
+
 ## Setup virtualenv
-  
-NOTE: Use `Conda` for Lightning and use `venv` for the component. 
+
+NOTE: Use `conda` for Lightning and use `venv` for the component.
 
 - setup vritual env
 ```bash
-virtualenv ~/venv-doccano 
-source ~/venv-venv-doccano/bin/activate;  python -m pip install doccano; deactivate
+virtualenv ~/venv-doccano
+source ~/venv-doccano/bin/activate;  python -m pip install doccano; deactivate
 ```
 
-- test 
+- test
 ```bash
 source ~/venv-doccano/bin/activate; doccano --help; deactivate
 ```

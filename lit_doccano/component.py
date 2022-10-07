@@ -16,7 +16,7 @@ events {
 }
 http {
     server {
-      listen $port;    
+      listen $port;
       location / {
         proxy_pass http://$host:$internal_port;
         proxy_hide_header x-frame-options;
@@ -41,6 +41,8 @@ class DoccanoBuildConfig(L.BuildConfig):
 class LitDoccano(L.LightningWork):
     def __init__(self, *args, cloud_build_config=DoccanoBuildConfig(), **kwargs) -> None:
         super().__init__(*args, cloud_build_config=cloud_build_config, **kwargs)
+        self.username = os.getenv("DOCCANO_USERNAME", "admin")
+        self.password = os.getenv("DOCCANO_PASSWORD", "password")
 
     def run(self):
         # prepare nginx conf with host and port numbers filled in
@@ -59,7 +61,7 @@ class LitDoccano(L.LightningWork):
         cmd = "source ~/venv-doccano/bin/activate;doccano init;deactivate"
         subprocess.run(cmd, shell=True, executable="/bin/bash")
 
-        cmd = "source ~/venv-doccano/bin/activate;doccano createuser --username admin --password pass;deactivate"
+        cmd = f"source ~/venv-doccano/bin/activate;doccano createuser --username {self.username} --password {self.password};deactivate"
         subprocess.run(cmd, shell=True, executable="/bin/bash")
 
         cmd = f"source ~/venv-doccano/bin/activate;export USE_ENFORCE_CSRF_CHECKS=false; doccano webserver;deactivate"
